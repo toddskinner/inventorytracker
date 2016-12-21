@@ -165,7 +165,55 @@ public class InventoryProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
-        return 0;
+    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+        final int match = sUriMatcher.match(uri);
+        switch(match){
+            case INVENTORY:
+                return updateInventory(uri, contentValues, selection, selectionArgs);
+            case INVENTORY_ID:
+                // Update a single row given by the ID in the URI
+                selection = InventoryEntry._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                return updateInventory(uri, contentValues, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
+    }
+
+    private int updateInventory(Uri uri, ContentValues values, String selection, String[] selectionArgs){
+
+        if(values.containsKey(InventoryEntry.COLUMN_ITEM_NAME)){
+            String name = values.getAsString(InventoryEntry.COLUMN_ITEM_NAME);
+            if(name == null){
+                throw new IllegalArgumentException("Item requires a name");
+            }
+        }
+
+        if(values.containsKey(InventoryEntry.COLUMN_ITEM_CATEGORY)) {
+            Integer category = values.getAsInteger(InventoryEntry.COLUMN_ITEM_CATEGORY);
+            if(category == null || !InventoryEntry.isValidCategory(category)){
+                throw new IllegalArgumentException("Item requires a valid category");
+            }
+        }
+
+        if(values.containsKey(InventoryEntry.COLUMN_ITEM_QUANTITY)){
+            Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_ITEM_QUANTITY);
+            if(quantity != null && quantity < 0){
+                throw new IllegalArgumentException("Item quantity can not be less than 0");
+            }
+        }
+
+        if (values.size() == 0) {
+            return 0;
+        }
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Perform the update on the database and get the number of rows affected
+        int rowsUpdated = db.update(InventoryEntry.TABLE_NAME, values, selection, selectionArgs);
+        if(rowsUpdated != 0){
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 }
