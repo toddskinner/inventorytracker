@@ -8,10 +8,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 
 import java.net.URI;
+import java.security.Provider;
 
+import static android.R.attr.category;
 import static com.example.android.barinventory.data.InventoryContract.PATH_INVENTORY;
 
 /**
@@ -22,6 +26,7 @@ public class InventoryProvider extends ContentProvider {
 
     //Database helper object
     private InventoryDbHelper mDbHelper;
+    public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
 
     // URI matcher code for the content URI for the inventory table */
     private static final int INVENTORY = 100;
@@ -44,12 +49,12 @@ public class InventoryProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mDbHelper = new InventoryDbHelper();
+        mDbHelper = new InventoryDbHelper(getContext());
         return true;
     }
 
     @Override
-    public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         //get readable database
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
         //This cursor will hold the result of the query
@@ -68,6 +73,8 @@ public class InventoryProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
+
+        //cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -89,10 +96,45 @@ public class InventoryProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match){
             case INVENTORY:
-                return insertInventory(uri, contentValues);
+                return insertInventoryItem(uri, contentValues);
             default:
                 throw new IllegalArgumentException("Insertion not supported for " + uri);
         }
+    }
+
+    private Uri insertInventoryItem(Uri uri, ContentValues values){
+        // Check that the name is not null
+        String name = values.getAsString(InventoryEntry.COLUMN_ITEM_NAME);
+        if (name == null) {
+            throw new IllegalArgumentException("Item requires a name");
+        }
+
+        Integer category = values.getAsInteger(InventoryEntry.COLUMN_ITEM_CATEGORY);
+        if (category == null || !InventoryEntry.isValidCategory(category)) {
+            throw new IllegalArgumentException("Item requires a valid category");
+        }
+
+        // If the quantity is provided, check that it's greater than or equal to 0
+        Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_ITEM_QUANTITY);
+        if (quantity != null && quantity < 0){
+            throw new IllegalArgumentException("Item quantity can not be less than 0");
+        }
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(InventoryEntry.TABLE_NAME, null, values);
+
+        if (newRowId == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+
+        //notify all listeners that the data has changed for the pet content URI
+        //uri: content://com.example.android.pets/pets
+        //getContext().getContentResolver().notifyChange(uri, null);
+
+        return ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, newRowId);
     }
 
     @Override
