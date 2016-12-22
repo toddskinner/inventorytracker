@@ -5,4 +5,5 @@ package com.example.android.barinventory;
  */
 
 public class EditorActivity {
+
 }
