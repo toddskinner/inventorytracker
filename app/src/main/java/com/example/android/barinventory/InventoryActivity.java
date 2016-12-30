@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+
+
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 import com.example.android.barinventory.data.InventoryDbHelper;
 
