@@ -241,7 +241,34 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.moveToFirst()) {
+            mNameEditText.setText(data.getString(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_NAME)));
+            mQuantityEditText.setText(Integer.toString(data.getInt(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_QUANTITY))));
 
+            int categoryColumnIndex = data.getColumnIndex(InventoryEntry.COLUMN_ITEM_CATEGORY);
+            int category = data.getInt(categoryColumnIndex);
+
+            switch (category) {
+                case InventoryEntry.CATEGORY_BEER:
+                    mCategorySpinner.setSelection(1);
+                    break;
+                case InventoryEntry.CATEGORY_WINE:
+                    mCategorySpinner.setSelection(2);
+                    break;
+                case InventoryEntry.CATEGORY_LIQUOR:
+                    mCategorySpinner.setSelection(3);
+                    break;
+                case InventoryEntry.CATEGORY_SODA:
+                    mCategorySpinner.setSelection(4);
+                    break;
+                case InventoryEntry.CATEGORY_JUICE:
+                    mCategorySpinner.setSelection(5);
+                    break;
+                case InventoryEntry.CATEGORY_MISC:
+                    mCategorySpinner.setSelection(0);
+                    break;
+            }
+        }
     }
 
     @Override
