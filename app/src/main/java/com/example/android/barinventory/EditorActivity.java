@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -273,6 +274,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        //callback called when the data needs to be deleted
+        mNameEditText.setText("");
+        mQuantityEditText.setText("");
+        mCategorySpinner.setSelection(0);
     }
+
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mInventoryHasChanged = true;
+            return false;
+        }
+    };
+
+    
 }
