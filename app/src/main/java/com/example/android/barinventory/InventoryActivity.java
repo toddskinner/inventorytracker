@@ -1,6 +1,6 @@
 package com.example.android.barinventory;
 
-import android.app.Activity;
+import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -8,16 +8,15 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.LoaderManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.support.design.widget.FloatingActionButton;
-import com.example.android.barinventory.data.InventoryContract;
+
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 import com.example.android.barinventory.data.InventoryDbHelper;
 
@@ -86,22 +85,22 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu options from the res/menu/menu_catalog.xml file.
-        // This adds menu items to the app bar.
-        getMenuInflater().inflate(R.menu.menu_catalog, menu);
+        // Inflate the menu_inventory options from the res/menu_inventory/menu_catalog.xml file.
+        // This adds menu_inventory items to the app bar.
+        getMenuInflater().inflate(R.menu.menu_inventory, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // User clicked on a menu option in the app bar overflow menu
+        // User clicked on a menu_inventory option in the app bar overflow menu_inventory
         switch (item.getItemId()) {
-            // Respond to a click on the "Insert dummy data" menu option
+            // Respond to a click on the "Insert dummy data" menu_inventory option
             case R.id.action_insert_dummy_data:
                 insertInventoryItem();
                 return true;
 
-            // Respond to a click on the "Delete all entries" menu option
+            // Respond to a click on the "Delete all entries" menu_inventory option
             case R.id.action_delete_all_entries:
                 getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
                 return true;
