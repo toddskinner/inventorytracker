@@ -251,6 +251,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int category = data.getInt(categoryColumnIndex);
 
             switch (category) {
+                case InventoryEntry.CATEGORY_MISC:
+                    mCategorySpinner.setSelection(0);
+                    break;
                 case InventoryEntry.CATEGORY_BEER:
                     mCategorySpinner.setSelection(1);
                     break;
@@ -265,9 +268,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     break;
                 case InventoryEntry.CATEGORY_JUICE:
                     mCategorySpinner.setSelection(5);
-                    break;
-                case InventoryEntry.CATEGORY_MISC:
-                    mCategorySpinner.setSelection(0);
                     break;
             }
         }

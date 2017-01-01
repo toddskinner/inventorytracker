@@ -60,4 +60,6 @@
     <string name="delete">Delete</string>
 
     <string name="cancel">Cancel</string>
+
+    <string name="unit_item_quantity">bottles</string>
 </resources>

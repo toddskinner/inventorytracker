@@ -91,6 +91,11 @@
                 android:inputType="number"
                 style="@style/EditorFieldStyle" />
 
+            <TextView
+                android:id="@+id/label_weight_units"
+                android:text="@string/unit_item_quantity"
+                style="@style/EditorUnitsStyle"/>
+
         </RelativeLayout>
     </LinearLayout>
 

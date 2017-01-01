@@ -2,7 +2,6 @@ package com.example.android.barinventory;
 
 import android.app.LoaderManager;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -16,8 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
-
 
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 import com.example.android.barinventory.data.InventoryDbHelper;
@@ -75,16 +72,6 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         getLoaderManager().initLoader(INVENTORY_URL_LOADER, null, this);
     }
 
-    private void insertInventoryItem(){
-        // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(InventoryEntry.COLUMN_ITEM_NAME, "Pliny the Elder");
-        values.put(InventoryEntry.COLUMN_ITEM_CATEGORY, InventoryEntry.CATEGORY_BEER);
-        values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, 7);
-
-        getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu_inventory options from the res/menu_inventory/menu_catalog.xml file.
@@ -97,10 +84,6 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu_inventory option in the app bar overflow menu_inventory
         switch (item.getItemId()) {
-            // Respond to a click on the "Insert dummy data" menu_inventory option
-            case R.id.action_insert_dummy_data:
-                insertInventoryItem();
-                return true;
 
             // Respond to a click on the "Delete all entries" menu_inventory option
             case R.id.action_delete_all_entries:
