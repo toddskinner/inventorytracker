@@ -23,6 +23,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".InventoryActivity" />
         </activity>
+        <activity
+            android:name=".BuySellActivity"
+            android:theme="@style/EditorTheme"
+            android:parentActivityName=".InventoryActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InventoryActivity" />
+        </activity>
         <provider
             android:authorities="com.example.android.barinventory"
             android:name=".data.InventoryProvider"

@@ -57,7 +57,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         inventoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(InventoryActivity.this, EditorActivity.class);
+                Intent intent = new Intent(InventoryActivity.this, BuySellActivity.class);
 
                 Uri currentInventoryItemUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, id);
 

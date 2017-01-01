@@ -5,69 +5,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/activity_margin"
-    tools:context=".EditorActivity">
+    tools:context=".BuySellActivity">
 
-    <!-- Overview category -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:id="@+id/buy_sell_item_name"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimaryDark"/>
 
-        <!-- Label -->
-        <TextView
-            android:text="@string/category_overview"
-            style="@style/CategoryStyle" />
-
-        <!-- Input fields -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
-
-            <!-- Name field -->
-            <EditText
-                android:id="@+id/edit_pet_name"
-                android:hint="@string/hint_item_name"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Category category -->
-    <LinearLayout
-        android:id="@+id/container_category"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:id="@+id/buy_sell_item_category"/>
 
-        <!-- Label -->
-        <TextView
-            android:text="@string/category_category"
-            style="@style/CategoryStyle" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buy_sell_item_quantity"/>
 
-        <!-- Input field -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <!-- Category drop-down spinner -->
-            <Spinner
-                android:id="@+id/spinner_category"
-                android:layout_height="48dp"
-                android:layout_width="wrap_content"
-                android:paddingRight="16dp"
-                android:spinnerMode="dropdown"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Quantity category -->
+    <!-- Buy Quantity category -->
     <LinearLayout
-        android:id="@+id/container_quantity"
+        android:id="@+id/container_buy_quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -86,13 +45,47 @@
 
             <!-- Quantity field -->
             <EditText
-                android:id="@+id/edit_item_quantity"
+                android:id="@+id/buy_item_quantity"
                 android:hint="@string/hint_item_quantity"
                 android:inputType="number"
                 style="@style/EditorFieldStyle" />
 
             <TextView
-                android:id="@+id/label_quantity_units"
+                android:id="@+id/label_buy_quantity_units"
+                android:text="@string/unit_item_quantity"
+                style="@style/EditorUnitsStyle"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- Sell Quantity category -->
+    <LinearLayout
+        android:id="@+id/container_sell_quantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            android:text="@string/category_quantity"
+            style="@style/CategoryStyle" />
+
+        <!-- Input fields -->
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+            <!-- Quantity field -->
+            <EditText
+                android:id="@+id/sell_item_quantity"
+                android:hint="@string/hint_item_quantity"
+                android:inputType="number"
+                style="@style/EditorFieldStyle" />
+
+            <TextView
+                android:id="@+id/label_sell_quantity_units"
                 android:text="@string/unit_item_quantity"
                 style="@style/EditorUnitsStyle"/>
 
