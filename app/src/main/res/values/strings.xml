@@ -62,4 +62,10 @@
     <string name="cancel">Cancel</string>
 
     <string name="unit_item_quantity">bottles</string>
+
+    <string name="label_category">Category</string>
+
+    <string name="label_item">Item</string>
+
+    <string name="label_quantity">Quantity</string>
 </resources>

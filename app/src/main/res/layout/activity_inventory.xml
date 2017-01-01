@@ -5,8 +5,52 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.barinventory.InventoryActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:text="@string/label_item"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:layout_centerInParent="true"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:text="@string/label_category"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:text="@string/label_quantity"/>
+
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/list_view_inventory"
+        android:layout_marginTop="32dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
