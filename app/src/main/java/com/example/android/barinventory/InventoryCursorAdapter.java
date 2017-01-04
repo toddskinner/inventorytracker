@@ -43,7 +43,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
             category = "Liquor";
         } else if(category.equals("4")){
             category = "Soda";
-        } else if(category.equals("5")){
+        } else if(category.equals("")){
             category = "Juice";
         } else {
             category = "Misc";
