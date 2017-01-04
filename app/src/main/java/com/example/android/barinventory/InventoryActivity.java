@@ -2,7 +2,6 @@ package com.example.android.barinventory;
 
 import android.app.LoaderManager;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -16,8 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
-
 
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 import com.example.android.barinventory.data.InventoryDbHelper;
@@ -105,7 +102,8 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_ITEM_NAME,
                 InventoryEntry.COLUMN_ITEM_CATEGORY,
-                InventoryEntry.COLUMN_ITEM_QUANTITY };
+                InventoryEntry.COLUMN_ITEM_QUANTITY,
+                InventoryEntry.COLUMN_ITEM_PRICE };
 
         //this loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(

@@ -25,7 +25,7 @@
 
     <string name="hint_item_quantity">Quantity</string>
 
-    <string name="hint_item_price">Price</string>
+    <string name="hint_item_price">$</string>
 
     <string name="category_misc">Misc</string>
 

@@ -7,15 +7,11 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 
-import java.net.URI;
-import java.security.Provider;
-
-import static android.R.attr.category;
+import static com.example.android.barinventory.R.id.quantity;
 import static com.example.android.barinventory.data.InventoryContract.PATH_INVENTORY;
 
 /**
@@ -120,6 +116,12 @@ public class InventoryProvider extends ContentProvider {
             throw new IllegalArgumentException("Item quantity can not be less than 0");
         }
 
+        // If the price is provided, check that it's greater than or equal to 0
+        Integer price = values.getAsInteger(InventoryEntry.COLUMN_ITEM_PRICE);
+        if (price != null && price < 0){
+            throw new IllegalArgumentException("Item price can not be less than 0");
+        }
+
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // Insert the new row, returning the primary key value of the new row
@@ -200,6 +202,13 @@ public class InventoryProvider extends ContentProvider {
             Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_ITEM_QUANTITY);
             if(quantity != null && quantity < 0){
                 throw new IllegalArgumentException("Item quantity can not be less than 0");
+            }
+        }
+
+        if(values.containsKey(InventoryEntry.COLUMN_ITEM_PRICE)){
+            Integer price = values.getAsInteger(InventoryEntry.COLUMN_ITEM_PRICE);
+            if(price != null && price < 0){
+                throw new IllegalArgumentException("Item price can not be less than 0");
             }
         }
 

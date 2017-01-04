@@ -31,6 +31,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         TextView itemName = (TextView) view.findViewById(R.id.name);
         TextView itemCategory = (TextView) view.findViewById(R.id.category);
         TextView itemQuantity = (TextView) view.findViewById(R.id.quantity);
+        TextView itemPrice = (TextView) view.findViewById(R.id.price);
         // Extract properties from cursor
         String name = cursor.getString(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_ITEM_NAME));
         String category = cursor.getString(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_ITEM_CATEGORY));
@@ -50,9 +51,12 @@ public class InventoryCursorAdapter extends CursorAdapter {
         }
 
         String quantity = cursor.getString(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_ITEM_QUANTITY));
+        String price = cursor.getString(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_ITEM_PRICE));
+
         // Populate fields with extracted properties
         itemName.setText(name);
         itemCategory.setText(category);
         itemQuantity.setText(quantity);
+        itemPrice.setText(price);
     }
 }

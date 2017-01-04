@@ -36,6 +36,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private EditText mNameEditText;
     private EditText mQuantityEditText;
+    private EditText mPriceEditText;
     private Spinner mCategorySpinner;
     private int mCategory = 0;
     private static final int INVENTORY_URL_LOADER = 0;
@@ -70,10 +71,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Find all relevant views that we will need to read user input from
         mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
         mQuantityEditText = (EditText) findViewById(R.id.edit_item_quantity);
+        mPriceEditText = (EditText) findViewById(R.id.edit_item_price);
         mCategorySpinner = (Spinner) findViewById(R.id.spinner_category);
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
+        mPriceEditText.setOnTouchListener(mTouchListener);
         mCategorySpinner.setOnTouchListener(mTouchListener);
 
         mDbHelper = new InventoryDbHelper(this);
@@ -127,6 +130,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void saveItem(){
         String nameString = mNameEditText.getText().toString().trim();
         int quantityInteger = 0;
+        int priceInteger = 0;
 
         if(mCurrentInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mQuantityEditText.getText()) && mCategory == InventoryEntry.CATEGORY_MISC){
             return;
@@ -136,10 +140,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             quantityInteger = parseInt(mQuantityEditText.getText().toString().trim());;
         }
 
+        if (!TextUtils.isEmpty(mPriceEditText.getText())) {
+            priceInteger = parseInt(mPriceEditText.getText().toString().trim());;
+        }
+
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_ITEM_NAME, nameString);
         values.put(InventoryEntry.COLUMN_ITEM_CATEGORY, mCategory);
         values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, quantityInteger);
+        values.put(InventoryEntry.COLUMN_ITEM_PRICE, priceInteger);
 
         if(mCurrentInventoryItemUri != null){
             int editedUri = getContentResolver().update(mCurrentInventoryItemUri, values, null, null);
@@ -228,7 +237,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_ITEM_NAME,
                 InventoryEntry.COLUMN_ITEM_CATEGORY,
-                InventoryEntry.COLUMN_ITEM_QUANTITY};
+                InventoryEntry.COLUMN_ITEM_QUANTITY,
+                InventoryEntry.COLUMN_ITEM_PRICE };
 
         //this loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(
@@ -246,6 +256,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (data.moveToFirst()) {
             mNameEditText.setText(data.getString(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_NAME)));
             mQuantityEditText.setText(Integer.toString(data.getInt(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_QUANTITY))));
+            mPriceEditText.setText(Integer.toString(data.getInt(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_PRICE))));
 
             int categoryColumnIndex = data.getColumnIndex(InventoryEntry.COLUMN_ITEM_CATEGORY);
             int category = data.getInt(categoryColumnIndex);
@@ -278,6 +289,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         //callback called when the data needs to be deleted
         mNameEditText.setText("");
         mQuantityEditText.setText("");
+        mPriceEditText.setText("");
         mCategorySpinner.setSelection(0);
     }
 

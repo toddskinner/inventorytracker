@@ -4,9 +4,6 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import static android.text.style.TtsSpan.GENDER_FEMALE;
-import static android.text.style.TtsSpan.GENDER_MALE;
-
 /**
  * Created by toddskinner on 12/16/16.
  */
@@ -45,6 +42,7 @@ public class InventoryContract {
         public static final String COLUMN_ITEM_NAME = "name";
         public static final String COLUMN_ITEM_CATEGORY = "category";
         public static final String COLUMN_ITEM_QUANTITY = "quantity";
+        public static final String COLUMN_ITEM_PRICE = "price";
 
         /**
          * Possible values for the category of the item.
