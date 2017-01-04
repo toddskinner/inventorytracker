@@ -128,4 +128,11 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/phonecall_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="@string/place_call" />
+
 </LinearLayout>

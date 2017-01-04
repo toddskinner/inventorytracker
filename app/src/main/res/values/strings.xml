@@ -31,6 +31,8 @@
 
     <string name="hint_item_phone">Tel #</string>
 
+    <string name="place_call">Order More</string>
+
     <string name="category_misc">Misc</string>
 
     <string name="category_beer">Beer</string>

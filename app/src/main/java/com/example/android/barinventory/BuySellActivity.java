@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
     private TextView mBuySellItemQuantity;
     private TextView mBuySellItemCategory;
     private int mBuySellItemPrice;
+    private String mBuySellItemPhone;
     private Uri mCurrentBuySellInventoryItemUri;
     private static final int ITEM_URL_LOADER = 0;
     private boolean mInventoryHasChanged = false;
@@ -68,7 +70,20 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         mSellQuantityEditText.setOnTouchListener(mTouchListener);
 
         mDbHelper = new InventoryDbHelper(this);
-    }
+
+        Button phoneOrder = (Button) findViewById(R.id.phonecall_button);
+        phoneOrder.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + mBuySellItemPhone));
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+    };
 
     private void saveBuySellItem(){
         String nameString = mBuySellItemName.getText().toString().trim();
@@ -76,6 +91,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         int sellQuantityInteger = 0;
         int totalQuantityInteger = 0;
         int priceInteger = mBuySellItemPrice;
+        String phoneString = mBuySellItemPhone;
 
         if(mCurrentBuySellInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mBuySellItemQuantity.getText()) && mCategory == InventoryEntry.CATEGORY_MISC){
             return;
@@ -93,6 +109,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         values.put(InventoryEntry.COLUMN_ITEM_CATEGORY, mCategory);
         values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, totalQuantityInteger);
         values.put(InventoryEntry.COLUMN_ITEM_PRICE, priceInteger);
+        values.put(InventoryEntry.COLUMN_ITEM_PHONE, phoneString);
 
         if(mCurrentBuySellInventoryItemUri != null){
             int editedUri = getContentResolver().update(mCurrentBuySellInventoryItemUri, values, null, null);
@@ -121,7 +138,8 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
                 InventoryEntry.COLUMN_ITEM_NAME,
                 InventoryEntry.COLUMN_ITEM_CATEGORY,
                 InventoryEntry.COLUMN_ITEM_QUANTITY,
-                InventoryEntry.COLUMN_ITEM_PRICE};
+                InventoryEntry.COLUMN_ITEM_PRICE,
+                InventoryEntry.COLUMN_ITEM_PHONE};
 
         //this loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(
@@ -140,6 +158,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
             mBuySellItemName.setText(data.getString(data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_NAME)));
             mBuySellItemQuantity.setText(Integer.toString(data.getInt(data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY))));
             mBuySellItemPrice = data.getInt(data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY));
+            mBuySellItemPhone = data.getString(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_PHONE));
 
 
             int categoryColumnIndex = data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_CATEGORY);
