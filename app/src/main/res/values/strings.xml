@@ -49,6 +49,8 @@
 
     <string name="editor_activity_title_edit_item">Edit Item</string>
 
+    <string name="order_activity_title">Order More Stock</string>
+
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing</string>
 
     <string name="discard">Discard</string>
@@ -75,7 +77,7 @@
 
     <string name="buy_sell_activity_title">Buy or Sell Inventory</string>
 
-    <string name="bought">Bought:</string>
+    <string name="bought">Order:</string>
 
     <string name="sold">Sold:</string>
 
