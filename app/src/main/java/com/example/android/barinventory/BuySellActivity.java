@@ -35,6 +35,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
     private TextView mBuySellItemName;
     private TextView mBuySellItemQuantity;
     private TextView mBuySellItemCategory;
+    private int mBuySellItemPrice;
     private Uri mCurrentBuySellInventoryItemUri;
     private static final int ITEM_URL_LOADER = 0;
     private boolean mInventoryHasChanged = false;
@@ -74,6 +75,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         int buyQuantityInteger = 0;
         int sellQuantityInteger = 0;
         int totalQuantityInteger = 0;
+        int priceInteger = mBuySellItemPrice;
 
         if(mCurrentBuySellInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mBuySellItemQuantity.getText()) && mCategory == InventoryEntry.CATEGORY_MISC){
             return;
@@ -90,6 +92,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         values.put(InventoryEntry.COLUMN_ITEM_NAME, nameString);
         values.put(InventoryEntry.COLUMN_ITEM_CATEGORY, mCategory);
         values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, totalQuantityInteger);
+        values.put(InventoryEntry.COLUMN_ITEM_PRICE, priceInteger);
 
         if(mCurrentBuySellInventoryItemUri != null){
             int editedUri = getContentResolver().update(mCurrentBuySellInventoryItemUri, values, null, null);
@@ -114,10 +117,11 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
     public Loader<Cursor> onCreateLoader(int loaderID, Bundle bundle) {
         //Define a projection that specifies the columns from the table we care about
         String[] projection = {
-                InventoryContract.InventoryEntry._ID,
-                InventoryContract.InventoryEntry.COLUMN_ITEM_NAME,
-                InventoryContract.InventoryEntry.COLUMN_ITEM_CATEGORY,
-                InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY};
+                InventoryEntry._ID,
+                InventoryEntry.COLUMN_ITEM_NAME,
+                InventoryEntry.COLUMN_ITEM_CATEGORY,
+                InventoryEntry.COLUMN_ITEM_QUANTITY,
+                InventoryEntry.COLUMN_ITEM_PRICE};
 
         //this loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(
@@ -135,6 +139,8 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         if (data.moveToFirst()) {
             mBuySellItemName.setText(data.getString(data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_NAME)));
             mBuySellItemQuantity.setText(Integer.toString(data.getInt(data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY))));
+            mBuySellItemPrice = data.getInt(data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY));
+
 
             int categoryColumnIndex = data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_CATEGORY);
             int category = data.getInt(categoryColumnIndex);
