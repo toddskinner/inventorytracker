@@ -70,4 +70,8 @@
     <string name="label_quantity">Quantity</string>
 
     <string name="buy_sell_activity_title">Buy or Sell Inventory</string>
+
+    <string name="bought">Bought:</string>
+
+    <string name="sold">Sold:</string>
 </resources>

@@ -35,6 +35,16 @@
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
+    <!-- Style for an EditText field in the buy-sell editor -->
+    <style name="BuySellFieldStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
     <!-- Style for the measurement units for an EditText field in the editor -->
     <style name="EditorUnitsStyle">
         <item name="android:layout_height">wrap_content</item>
