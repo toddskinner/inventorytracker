@@ -1,6 +1,7 @@
 package com.example.android.barinventory;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -20,7 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.barinventory.data.InventoryContract;
+import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 import com.example.android.barinventory.data.InventoryDbHelper;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * Created by toddskinner on 12/31/16.
@@ -36,6 +41,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
     private InventoryDbHelper mDbHelper;
     private EditText mBuyQuantityEditText;
     private EditText mSellQuantityEditText;
+    private int mCategory = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +70,44 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
     }
 
     private void saveBuySellItem(){
+        String nameString = mBuySellItemName.getText().toString().trim();
+        int buyQuantityInteger = 0;
+        int sellQuantityInteger = 0;
+        int totalQuantityInteger = 0;
 
+        if(mCurrentBuySellInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mBuySellItemQuantity.getText()) && mCategory == InventoryEntry.CATEGORY_MISC){
+            return;
+        }
+
+        if (!TextUtils.isEmpty(mBuyQuantityEditText.getText()) && !TextUtils.isEmpty(mSellQuantityEditText.getText())) {
+            totalQuantityInteger = parseInt(mBuySellItemQuantity.getText().toString().trim());
+            buyQuantityInteger = parseInt(mBuyQuantityEditText.getText().toString().trim());
+            sellQuantityInteger = parseInt(mSellQuantityEditText.getText().toString().trim());
+            totalQuantityInteger = totalQuantityInteger + buyQuantityInteger - sellQuantityInteger;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(InventoryEntry.COLUMN_ITEM_NAME, nameString);
+        values.put(InventoryEntry.COLUMN_ITEM_CATEGORY, mCategory);
+        values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, totalQuantityInteger);
+
+        if(mCurrentBuySellInventoryItemUri != null){
+            int editedUri = getContentResolver().update(mCurrentBuySellInventoryItemUri, values, null, null);
+
+            if (editedUri != 0) {
+                Toast.makeText(this, R.string.toast_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.toast_fail, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
+
+            if (newUri != null) {
+                Toast.makeText(this, R.string.toast_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.toast_fail, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -98,21 +141,27 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
 
             switch (category) {
                 case InventoryContract.InventoryEntry.CATEGORY_MISC:
+                    mCategory = 0;
                     mBuySellItemCategory.setText("Misc");
                     break;
                 case InventoryContract.InventoryEntry.CATEGORY_BEER:
+                    mCategory = 1;
                     mBuySellItemCategory.setText("Beer");
                     break;
                 case InventoryContract.InventoryEntry.CATEGORY_WINE:
+                    mCategory = 2;
                     mBuySellItemCategory.setText("Wine");
                     break;
                 case InventoryContract.InventoryEntry.CATEGORY_LIQUOR:
+                    mCategory = 3;
                     mBuySellItemCategory.setText("Liquor");
                     break;
                 case InventoryContract.InventoryEntry.CATEGORY_SODA:
+                    mCategory = 4;
                     mBuySellItemCategory.setText("Soda");
                     break;
                 case InventoryContract.InventoryEntry.CATEGORY_JUICE:
+                    mCategory = 5;
                     mBuySellItemCategory.setText("Juice");
                     break;
             }

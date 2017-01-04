@@ -36,7 +36,7 @@
             android:layout_weight="8"
             android:layout_height="wrap_content"
             android:textAlignment="viewEnd"
-            android:text="In Stock:"
+            android:text="@string/instock"
             android:textStyle="bold"
             android:textSize="18sp" />
 
