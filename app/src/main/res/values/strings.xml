@@ -19,6 +19,8 @@
 
     <string name="category_price">Price</string>
 
+    <string name="category_phone">Phone</string>
+
     <string name="hint_item_name">Name</string>
 
     <string name="hint_item_category">Category</string>
@@ -26,6 +28,8 @@
     <string name="hint_item_quantity">Quantity</string>
 
     <string name="hint_item_price">$</string>
+
+    <string name="hint_item_phone">Tel #</string>
 
     <string name="category_misc">Misc</string>
 

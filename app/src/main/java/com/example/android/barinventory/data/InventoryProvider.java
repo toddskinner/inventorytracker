@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 
-import static com.example.android.barinventory.R.id.quantity;
 import static com.example.android.barinventory.data.InventoryContract.PATH_INVENTORY;
 
 /**
@@ -122,6 +121,12 @@ public class InventoryProvider extends ContentProvider {
             throw new IllegalArgumentException("Item price can not be less than 0");
         }
 
+        // If the price is provided, check that it's greater than or equal to 0
+        String phone = values.getAsString(InventoryEntry.COLUMN_ITEM_PHONE);
+        if (phone != null && phone.length() != 10){
+            throw new IllegalArgumentException("Supplier contact number can not be less than 10 digits");
+        }
+
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // Insert the new row, returning the primary key value of the new row
@@ -209,6 +214,13 @@ public class InventoryProvider extends ContentProvider {
             Integer price = values.getAsInteger(InventoryEntry.COLUMN_ITEM_PRICE);
             if(price != null && price < 0){
                 throw new IllegalArgumentException("Item price can not be less than 0");
+            }
+        }
+
+        if(values.containsKey(InventoryEntry.COLUMN_ITEM_PHONE)){
+            String phone = values.getAsString(InventoryEntry.COLUMN_ITEM_PHONE);
+            if(phone != null && phone.length() != 10){
+                throw new IllegalArgumentException("Supplier contact phone number can not be less than 10 digits");
             }
         }
 

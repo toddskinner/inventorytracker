@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mNameEditText;
     private EditText mQuantityEditText;
     private EditText mPriceEditText;
+    private EditText mPhoneEditText;
     private Spinner mCategorySpinner;
     private int mCategory = 0;
     private static final int INVENTORY_URL_LOADER = 0;
@@ -72,11 +74,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
         mQuantityEditText = (EditText) findViewById(R.id.edit_item_quantity);
         mPriceEditText = (EditText) findViewById(R.id.edit_item_price);
+        mPhoneEditText = (EditText) findViewById(R.id.edit_item_phone);
+        mPhoneEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         mCategorySpinner = (Spinner) findViewById(R.id.spinner_category);
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
+        mPhoneEditText.setOnTouchListener(mTouchListener);
         mCategorySpinner.setOnTouchListener(mTouchListener);
 
         mDbHelper = new InventoryDbHelper(this);
@@ -131,6 +136,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String nameString = mNameEditText.getText().toString().trim();
         int quantityInteger = 0;
         int priceInteger = 0;
+        int phoneInteger = 0;
 
         if(mCurrentInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mQuantityEditText.getText()) && mCategory == InventoryEntry.CATEGORY_MISC){
             return;
@@ -144,11 +150,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             priceInteger = parseInt(mPriceEditText.getText().toString().trim());;
         }
 
+        if (!TextUtils.isEmpty(mPhoneEditText.getText())) {
+            phoneInteger = parseInt(mPhoneEditText.getText().toString().trim());;
+        }
+
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_ITEM_NAME, nameString);
         values.put(InventoryEntry.COLUMN_ITEM_CATEGORY, mCategory);
         values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, quantityInteger);
         values.put(InventoryEntry.COLUMN_ITEM_PRICE, priceInteger);
+        values.put(InventoryEntry.COLUMN_ITEM_PHONE, phoneInteger);
 
         if(mCurrentInventoryItemUri != null){
             int editedUri = getContentResolver().update(mCurrentInventoryItemUri, values, null, null);
@@ -238,7 +249,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 InventoryEntry.COLUMN_ITEM_NAME,
                 InventoryEntry.COLUMN_ITEM_CATEGORY,
                 InventoryEntry.COLUMN_ITEM_QUANTITY,
-                InventoryEntry.COLUMN_ITEM_PRICE };
+                InventoryEntry.COLUMN_ITEM_PRICE,
+                InventoryEntry.COLUMN_ITEM_PHONE};
 
         //this loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(
@@ -257,6 +269,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mNameEditText.setText(data.getString(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_NAME)));
             mQuantityEditText.setText(Integer.toString(data.getInt(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_QUANTITY))));
             mPriceEditText.setText(Integer.toString(data.getInt(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_PRICE))));
+            mPhoneEditText.setText(Integer.toString(data.getInt(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_PHONE))));
 
             int categoryColumnIndex = data.getColumnIndex(InventoryEntry.COLUMN_ITEM_CATEGORY);
             int category = data.getInt(categoryColumnIndex);
@@ -290,6 +303,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mNameEditText.setText("");
         mQuantityEditText.setText("");
         mPriceEditText.setText("");
+        mPhoneEditText.setText("");
         mCategorySpinner.setSelection(0);
     }
 
