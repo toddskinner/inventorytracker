@@ -47,6 +47,8 @@
 
     <string name="toast_fail">Error with saving item</string>
 
+    <string name="toast_fail_no_negative">Inventory can not be less than 0</string>
+
     <string name="toast_success">Item saved</string>
 
     <string name="empty_view_title_text">It\'s a bit lonely here...</string>
@@ -83,7 +85,7 @@
 
     <string name="buy_sell_activity_title">Buy or Sell Inventory</string>
 
-    <string name="bought">Order:</string>
+    <string name="bought">Received:</string>
 
     <string name="sold">Sold:</string>
 

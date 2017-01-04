@@ -83,25 +83,41 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
                 }
             }
         });
+
+        Button orderReceived = (Button) findViewById(R.id.received_confirmation_button);
+        orderReceived.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                saveOrderReceivedItem();
+            }
+        });
+
+        Button itemSold = (Button) findViewById(R.id.sold_confirmation_button);
+        itemSold.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                saveSoldItem();
+            }
+        });
     };
 
-    private void saveBuySellItem(){
+    private void saveOrderReceivedItem() {
         String nameString = mBuySellItemName.getText().toString().trim();
-        int buyQuantityInteger = 0;
-        int sellQuantityInteger = 0;
+        int buyQuantityInteger;
         int totalQuantityInteger = 0;
         int priceInteger = mBuySellItemPrice;
         String phoneString = mBuySellItemPhone;
 
-        if(mCurrentBuySellInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mBuySellItemQuantity.getText()) && mCategory == InventoryEntry.CATEGORY_MISC){
+        if (mCurrentBuySellInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mBuySellItemQuantity.getText()) && mCategory == InventoryEntry.CATEGORY_MISC) {
             return;
         }
 
-        if (!TextUtils.isEmpty(mBuyQuantityEditText.getText()) && !TextUtils.isEmpty(mSellQuantityEditText.getText())) {
+        if (!TextUtils.isEmpty(mBuyQuantityEditText.getText())) {
             totalQuantityInteger = parseInt(mBuySellItemQuantity.getText().toString().trim());
             buyQuantityInteger = parseInt(mBuyQuantityEditText.getText().toString().trim());
-            sellQuantityInteger = parseInt(mSellQuantityEditText.getText().toString().trim());
-            totalQuantityInteger = totalQuantityInteger + buyQuantityInteger - sellQuantityInteger;
+            totalQuantityInteger = totalQuantityInteger + buyQuantityInteger;
         }
 
         ContentValues values = new ContentValues();
@@ -111,8 +127,10 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         values.put(InventoryEntry.COLUMN_ITEM_PRICE, priceInteger);
         values.put(InventoryEntry.COLUMN_ITEM_PHONE, phoneString);
 
-        if(mCurrentBuySellInventoryItemUri != null){
+
+        if (mCurrentBuySellInventoryItemUri != null) {
             int editedUri = getContentResolver().update(mCurrentBuySellInventoryItemUri, values, null, null);
+            mBuyQuantityEditText.setText("");
 
             if (editedUri != 0) {
                 Toast.makeText(this, R.string.toast_success, Toast.LENGTH_SHORT).show();
@@ -129,6 +147,57 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
             }
         }
     }
+
+    private void saveSoldItem(){
+        String nameString = mBuySellItemName.getText().toString().trim();
+        int sellQuantityInteger;
+        int totalQuantityInteger = 0;
+        int priceInteger = mBuySellItemPrice;
+        String phoneString = mBuySellItemPhone;
+
+        if(mCurrentBuySellInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mBuySellItemQuantity.getText()) && mCategory == InventoryEntry.CATEGORY_MISC){
+            return;
+        }
+
+        if (!TextUtils.isEmpty(mSellQuantityEditText.getText())) {
+            totalQuantityInteger = parseInt(mBuySellItemQuantity.getText().toString().trim());
+            sellQuantityInteger = parseInt(mSellQuantityEditText.getText().toString().trim());
+            totalQuantityInteger = totalQuantityInteger - sellQuantityInteger;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(InventoryEntry.COLUMN_ITEM_NAME, nameString);
+        values.put(InventoryEntry.COLUMN_ITEM_CATEGORY, mCategory);
+        values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, totalQuantityInteger);
+        values.put(InventoryEntry.COLUMN_ITEM_PRICE, priceInteger);
+        values.put(InventoryEntry.COLUMN_ITEM_PHONE, phoneString);
+
+        if(totalQuantityInteger >= 0) {
+
+            if (mCurrentBuySellInventoryItemUri != null) {
+                int editedUri = getContentResolver().update(mCurrentBuySellInventoryItemUri, values, null, null);
+                mSellQuantityEditText.setText("");
+
+                if (editedUri != 0) {
+                    Toast.makeText(this, R.string.toast_success, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.toast_fail, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
+
+                if (newUri != null) {
+                    Toast.makeText(this, R.string.toast_success, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.toast_fail, Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            Toast.makeText(this, R.string.toast_fail_no_negative, Toast.LENGTH_SHORT).show();
+            mSellQuantityEditText.setText("");
+        }
+    }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderID, Bundle bundle) {
@@ -207,8 +276,6 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save_buy_sell:
-                //save item to database
-                saveBuySellItem();
                 //exit activity
                 finish();
                 return true;
