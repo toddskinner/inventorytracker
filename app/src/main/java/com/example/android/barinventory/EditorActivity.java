@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -39,11 +40,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceEditText;
     private EditText mPhoneEditText;
     private Spinner mCategorySpinner;
+    private Uri mPhotoURI;
     private int mCategory = 0;
     private static final int INVENTORY_URL_LOADER = 0;
     private Uri mCurrentInventoryItemUri;
     private boolean mInventoryHasChanged = false;
     private InventoryDbHelper mDbHelper;
+    private static int RESULT_LOAD_IMAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         mDbHelper = new InventoryDbHelper(this);
         setupSpinner();
+
+        Button uploadPhoto = (Button) findViewById(R.id.upload_item_photo);
+        uploadPhoto.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, RESULT_LOAD_IMAGE);
+
+            }
+        });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            mPhotoURI = data.getData();
+        }
     }
 
     /**

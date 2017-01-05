@@ -101,6 +101,9 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
                 saveSoldItem();
             }
         });
+
+        //ImageView imageView = (ImageView) findViewById(R.id.imgView);
+        //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
     };
 
     private void saveOrderReceivedItem() {

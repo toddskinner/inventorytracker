@@ -21,6 +21,8 @@
 
     <string name="category_phone">Phone</string>
 
+    <string name="category_photo">Photo</string>
+
     <string name="hint_item_name">Name</string>
 
     <string name="hint_item_category">Category</string>

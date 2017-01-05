@@ -159,4 +159,33 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <!-- Photo category -->
+    <LinearLayout
+        android:id="@+id/container_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            android:text="@string/category_photo"
+            style="@style/CategoryStyle" />
+
+        <!-- Input fields -->
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+            <!-- Upload photo button -->
+            <Button
+                android:id="@+id/upload_item_photo"
+                style="@style/EditorFieldStyle"
+                android:text="Upload Photo" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
