@@ -13,6 +13,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 import com.example.android.barinventory.data.InventoryDbHelper;
 
+import static com.example.android.barinventory.data.InventoryProvider.LOG_TAG;
 import static java.lang.Integer.parseInt;
 
 /**
@@ -40,7 +42,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceEditText;
     private EditText mPhoneEditText;
     private Spinner mCategorySpinner;
-    private Uri mPhotoURI;
+    private String mPhotoURIString;
     private int mCategory = 0;
     private static final int INVENTORY_URL_LOADER = 0;
     private Uri mCurrentInventoryItemUri;
@@ -105,7 +107,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            mPhotoURI = data.getData();
+            mPhotoURIString = data.getData().toString();
+
+            Log.i(LOG_TAG, "Uri: " + mPhotoURIString);
         }
     }
 
@@ -177,6 +181,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, quantityInteger);
         values.put(InventoryEntry.COLUMN_ITEM_PRICE, priceInteger);
         values.put(InventoryEntry.COLUMN_ITEM_PHONE, phoneString);
+        values.put(InventoryEntry.COLUMN_ITEM_PHOTO, mPhotoURIString);
 
         if(mCurrentInventoryItemUri != null){
             int editedUri = getContentResolver().update(mCurrentInventoryItemUri, values, null, null);

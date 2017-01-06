@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -19,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,15 +38,20 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
     private TextView mBuySellItemName;
     private TextView mBuySellItemQuantity;
     private TextView mBuySellItemCategory;
+    private ImageView mBuySellItemPhoto;
     private int mBuySellItemPrice;
     private String mBuySellItemPhone;
+    private String mBuySellItemPhotoString;
+    private Drawable mDrawable;
     private Uri mCurrentBuySellInventoryItemUri;
+    private Uri mBuySellItemPhotoUri;
     private static final int ITEM_URL_LOADER = 0;
     private boolean mInventoryHasChanged = false;
     private InventoryDbHelper mDbHelper;
     private EditText mBuyQuantityEditText;
     private EditText mSellQuantityEditText;
     private int mCategory = 0;
+    private static int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         mBuySellItemName = (TextView) findViewById(R.id.buy_sell_item_name);
         mBuySellItemCategory = (TextView) findViewById(R.id.buy_sell_item_category);
         mBuySellItemQuantity = (TextView) findViewById(R.id.buy_sell_item_quantity);
+        mBuySellItemPhoto = (ImageView) findViewById(R.id.buy_item_photo);
 
         // Find all relevant views that we will need to read user input from
         mBuyQuantityEditText = (EditText) findViewById(R.id.buy_item_quantity);
@@ -112,6 +120,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         int totalQuantityInteger = 0;
         int priceInteger = mBuySellItemPrice;
         String phoneString = mBuySellItemPhone;
+        String photoString = mBuySellItemPhotoString;
 
         if (mCurrentBuySellInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mBuySellItemQuantity.getText()) && mCategory == InventoryEntry.CATEGORY_MISC) {
             return;
@@ -129,6 +138,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, totalQuantityInteger);
         values.put(InventoryEntry.COLUMN_ITEM_PRICE, priceInteger);
         values.put(InventoryEntry.COLUMN_ITEM_PHONE, phoneString);
+        values.put(InventoryEntry.COLUMN_ITEM_PHOTO, photoString);
 
 
         if (mCurrentBuySellInventoryItemUri != null) {
@@ -157,6 +167,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         int totalQuantityInteger = 0;
         int priceInteger = mBuySellItemPrice;
         String phoneString = mBuySellItemPhone;
+        String photoString = mBuySellItemPhotoString;
 
         if(mCurrentBuySellInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mBuySellItemQuantity.getText()) && mCategory == InventoryEntry.CATEGORY_MISC){
             return;
@@ -174,6 +185,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, totalQuantityInteger);
         values.put(InventoryEntry.COLUMN_ITEM_PRICE, priceInteger);
         values.put(InventoryEntry.COLUMN_ITEM_PHONE, phoneString);
+        values.put(InventoryEntry.COLUMN_ITEM_PHOTO, photoString);
 
         if(totalQuantityInteger >= 0) {
 
@@ -211,7 +223,8 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
                 InventoryEntry.COLUMN_ITEM_CATEGORY,
                 InventoryEntry.COLUMN_ITEM_QUANTITY,
                 InventoryEntry.COLUMN_ITEM_PRICE,
-                InventoryEntry.COLUMN_ITEM_PHONE};
+                InventoryEntry.COLUMN_ITEM_PHONE,
+                InventoryEntry.COLUMN_ITEM_PHOTO};
 
         //this loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(
@@ -231,6 +244,9 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
             mBuySellItemQuantity.setText(Integer.toString(data.getInt(data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY))));
             mBuySellItemPrice = data.getInt(data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY));
             mBuySellItemPhone = data.getString(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_PHONE));
+
+            mBuySellItemPhotoString = data.getString(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_PHOTO));
+            //mBuySellItemPhoto.setImageBitmap(getBitmapFromUri(Uri.parse(mBuySellItemPhotoString)));
 
 
             int categoryColumnIndex = data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_CATEGORY);

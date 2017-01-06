@@ -121,10 +121,16 @@ public class InventoryProvider extends ContentProvider {
             throw new IllegalArgumentException("Item price can not be less than 0");
         }
 
-        // If the price is provided, check that it's greater than or equal to 0
+        // If the phone # is provided, check that it's equal to 10 digits
         String phone = values.getAsString(InventoryEntry.COLUMN_ITEM_PHONE);
         if (phone != null && phone.length() != 10){
             throw new IllegalArgumentException("Supplier contact number can not be less than 10 digits");
+        }
+
+        // Check that photo is provided
+        String photo = values.getAsString(InventoryEntry.COLUMN_ITEM_PHOTO);
+        if (photo == null){
+            throw new IllegalArgumentException("Photo not provided");
         }
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -221,6 +227,13 @@ public class InventoryProvider extends ContentProvider {
             String phone = values.getAsString(InventoryEntry.COLUMN_ITEM_PHONE);
             if(phone != null && phone.length() != 10){
                 throw new IllegalArgumentException("Supplier contact phone number can not be less than 10 digits");
+            }
+        }
+
+        if(values.containsKey(InventoryEntry.COLUMN_ITEM_PHOTO)){
+            String photo = values.getAsString(InventoryEntry.COLUMN_ITEM_PHOTO);
+            if(photo == null){
+                throw new IllegalArgumentException("Photo not provided");
             }
         }
 

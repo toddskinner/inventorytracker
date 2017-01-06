@@ -44,6 +44,7 @@ public class InventoryContract {
         public static final String COLUMN_ITEM_QUANTITY = "quantity";
         public static final String COLUMN_ITEM_PRICE = "price";
         public static final String COLUMN_ITEM_PHONE = "phone";
+        public static final String COLUMN_ITEM_PHOTO = "photo";
 
         /**
          * Possible values for the category of the item.

@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 
 public class InventoryDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "barinventory.db";
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + InventoryEntry.TABLE_NAME + " (" +
@@ -19,7 +19,8 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
                     InventoryEntry.COLUMN_ITEM_CATEGORY + " INTEGER," +
                     InventoryEntry.COLUMN_ITEM_QUANTITY + " INTEGER," +
                     InventoryEntry.COLUMN_ITEM_PRICE + " INTEGER," +
-                    InventoryEntry.COLUMN_ITEM_PHONE + " TEXT" + ")";
+                    InventoryEntry.COLUMN_ITEM_PHONE + " TEXT," +
+                    InventoryEntry.COLUMN_ITEM_PHOTO + " TEXT" + ")";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + InventoryEntry.TABLE_NAME;
