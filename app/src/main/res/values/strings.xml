@@ -43,6 +43,8 @@
 
     <string name="category_liquor">Liquor</string>
 
+    <string name="toast_not_less_zero">Inventory can not be negative</string>
+
     <string name="category_soda">Soda</string>
 
     <string name="category_juice">Juice</string>
