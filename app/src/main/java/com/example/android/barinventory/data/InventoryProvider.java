@@ -111,20 +111,20 @@ public class InventoryProvider extends ContentProvider {
 
         // If the quantity is provided, check that it's greater than or equal to 0
         Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_ITEM_QUANTITY);
-        if (quantity != null && quantity < 0){
-            throw new IllegalArgumentException("Item quantity can not be less than 0");
+        if (quantity == null || quantity < 0){
+            throw new IllegalArgumentException("Item quantity can not be null or less than 0");
         }
 
         // If the price is provided, check that it's greater than or equal to 0
         Integer price = values.getAsInteger(InventoryEntry.COLUMN_ITEM_PRICE);
-        if (price != null && price < 0){
-            throw new IllegalArgumentException("Item price can not be less than 0");
+        if (price == null || price < 0){
+            throw new IllegalArgumentException("Item price can not be null or less than 0");
         }
 
         // If the phone # is provided, check that it's equal to 10 digits
         String phone = values.getAsString(InventoryEntry.COLUMN_ITEM_PHONE);
-        if (phone != null && phone.length() != 10){
-            throw new IllegalArgumentException("Supplier contact number can not be less than 10 digits");
+        if (phone == null || phone.length() != 10){
+            throw new IllegalArgumentException("Supplier contact number can not be null or less than 10 digits");
         }
 
         // Check that photo is provided
@@ -211,22 +211,22 @@ public class InventoryProvider extends ContentProvider {
 
         if(values.containsKey(InventoryEntry.COLUMN_ITEM_QUANTITY)){
             Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_ITEM_QUANTITY);
-            if(quantity != null && quantity < 0){
-                throw new IllegalArgumentException("Item quantity can not be less than 0");
+            if(quantity == null || quantity < 0){
+                throw new IllegalArgumentException("Item quantity can not be null or less than 0");
             }
         }
 
         if(values.containsKey(InventoryEntry.COLUMN_ITEM_PRICE)){
             Integer price = values.getAsInteger(InventoryEntry.COLUMN_ITEM_PRICE);
-            if(price != null && price < 0){
-                throw new IllegalArgumentException("Item price can not be less than 0");
+            if(price == null || price < 0){
+                throw new IllegalArgumentException("Item price can not be null or less than 0");
             }
         }
 
         if(values.containsKey(InventoryEntry.COLUMN_ITEM_PHONE)){
             String phone = values.getAsString(InventoryEntry.COLUMN_ITEM_PHONE);
-            if(phone != null && phone.length() != 10){
-                throw new IllegalArgumentException("Supplier contact phone number can not be less than 10 digits");
+            if(phone == null || phone.length() != 10){
+                throw new IllegalArgumentException("Supplier contact phone number can not be null or less than 10 digits");
             }
         }
 
