@@ -204,28 +204,28 @@ public class InventoryProvider extends ContentProvider {
 
         if(values.containsKey(InventoryEntry.COLUMN_ITEM_CATEGORY)) {
             Integer category = values.getAsInteger(InventoryEntry.COLUMN_ITEM_CATEGORY);
-            if(category == null || !InventoryEntry.isValidCategory(category)){
+            if(category != null || !InventoryEntry.isValidCategory(category)){
                 throw new IllegalArgumentException("Item requires a valid category");
             }
         }
 
         if(values.containsKey(InventoryEntry.COLUMN_ITEM_QUANTITY)){
             Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_ITEM_QUANTITY);
-            if(quantity == null || quantity < 0){
+            if(quantity != null || quantity < 0){
                 throw new IllegalArgumentException("Item quantity can not be null or less than 0");
             }
         }
 
         if(values.containsKey(InventoryEntry.COLUMN_ITEM_PRICE)){
             Integer price = values.getAsInteger(InventoryEntry.COLUMN_ITEM_PRICE);
-            if(price == null || price < 0){
+            if(price != null || price < 0){
                 throw new IllegalArgumentException("Item price can not be null or less than 0");
             }
         }
 
         if(values.containsKey(InventoryEntry.COLUMN_ITEM_PHONE)){
             String phone = values.getAsString(InventoryEntry.COLUMN_ITEM_PHONE);
-            if(phone == null || phone.length() != 10){
+            if(phone != null || phone.length() != 10){
                 throw new IllegalArgumentException("Supplier contact phone number can not be null or less than 10 digits");
             }
         }

@@ -42,7 +42,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceEditText;
     private EditText mPhoneEditText;
     private Spinner mCategorySpinner;
-    private String mPhotoURIString;
+    private String mPhotoURIString = null;
     private int mCategory = 0;
     private static final int INVENTORY_URL_LOADER = 0;
     private Uri mCurrentInventoryItemUri;
@@ -163,7 +163,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         int priceInteger = 0;
         String phoneString = mPhoneEditText.getText().toString().trim();
 
-        if(mCurrentInventoryItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(mQuantityEditText.getText()) && mCategory == InventoryEntry.CATEGORY_MISC && TextUtils.isEmpty(mPhoneEditText.getText())){
+        if(mCurrentInventoryItemUri == null || TextUtils.isEmpty(nameString) || TextUtils.isEmpty(mQuantityEditText.getText()) || TextUtils.isEmpty(mPhoneEditText.getText()) || mPhotoURIString == null){
+            Toast.makeText(this, R.string.toast_all_data_required, Toast.LENGTH_SHORT).show();
             return;
         }
 

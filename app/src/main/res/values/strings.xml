@@ -41,6 +41,8 @@
 
     <string name="category_wine">Wine</string>
 
+    <string name="toast_all_data_required">Information must be provided for all fields</string>
+
     <string name="category_liquor">Liquor</string>
 
     <string name="toast_not_less_zero">Inventory can not be negative</string>
