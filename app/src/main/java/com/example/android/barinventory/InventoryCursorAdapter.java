@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
@@ -46,7 +45,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
             category = "Liquor";
         } else if(category.equals("4")){
             category = "Soda";
-        } else if(category.equals("")){
+        } else if(category.equals("5")){
             category = "Juice";
         } else {
             category = "Misc";

@@ -18,8 +18,8 @@
 
     <ImageView
         android:id="@+id/buy_item_photo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:scaleType="centerCrop"
         android:layout_gravity="center"/>
 

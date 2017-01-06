@@ -1,19 +1,28 @@
 package com.example.android.barinventory;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -28,6 +37,10 @@ import com.example.android.barinventory.data.InventoryContract;
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 import com.example.android.barinventory.data.InventoryDbHelper;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
+
+import static com.example.android.barinventory.data.InventoryProvider.LOG_TAG;
 import static java.lang.Integer.parseInt;
 
 /**
@@ -51,7 +64,13 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
     private EditText mBuyQuantityEditText;
     private EditText mSellQuantityEditText;
     private int mCategory = 0;
-    private static int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    private Bitmap mBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +129,68 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
             }
         });
 
-        //ImageView imageView = (ImageView) findViewById(R.id.imgView);
-        //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        requestPermissions();
     };
+
+    //Referenced the following discussion and gist to figure out how to request permissions and get a bitmap from the URI in order to
+    //show the image:
+    // https://discussions.udacity.com/t/im-having-some-problems-with-the-final-project-image-and-sell-button/200641/10
+    // https://gist.github.com/crlsndrsjmnz/1652e9cfea1061aa67bdc2cf0d622ef9
+
+    //Code below from the above referenced gist and discussion
+
+    public void requestPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            verifyStoragePermissions(this);
+
+
+        } else {
+            Log.i(LOG_TAG, "Permissions granted");
+        }
+    }
+
+    //Code below from the above referenced gist and discussion
+
+    public static void verifyStoragePermissions(Activity activity) {
+        int permission = ActivityCompat.checkSelfPermission(
+                activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+    //Code below from the above referenced gist and discussion
+
+    private Bitmap getBitmapFromUri(Uri uri) {
+        ParcelFileDescriptor parcelFileDescriptor = null;
+        try {
+            parcelFileDescriptor =
+                    getContentResolver().openFileDescriptor(uri, "r");
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            parcelFileDescriptor.close();
+            return image;
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Failed to load image.", e);
+            return null;
+        } finally {
+            try {
+                if (parcelFileDescriptor != null) {
+                    parcelFileDescriptor.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, "Error closing ParcelFile Descriptor");
+            }
+        }
+    }
 
     private void saveOrderReceivedItem() {
         String nameString = mBuySellItemName.getText().toString().trim();
@@ -246,7 +324,17 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
             mBuySellItemPhone = data.getString(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_PHONE));
 
             mBuySellItemPhotoString = data.getString(data.getColumnIndex(InventoryEntry.COLUMN_ITEM_PHOTO));
-            //mBuySellItemPhoto.setImageBitmap(getBitmapFromUri(Uri.parse(mBuySellItemPhotoString)));
+
+
+            //Code below from the above referenced gist and discussion
+
+            Uri uri = Uri.parse(mBuySellItemPhotoString);
+
+            Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>> uri: " + uri);
+
+            mBitmap = getBitmapFromUri(uri);
+            mBuySellItemPhoto.setImageBitmap(mBitmap);
+            Log.e("Image Uri ", mBuySellItemPhotoString);
 
 
             int categoryColumnIndex = data.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_CATEGORY);
