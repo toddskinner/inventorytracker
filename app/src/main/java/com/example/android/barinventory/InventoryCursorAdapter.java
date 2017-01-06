@@ -74,6 +74,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
         //set tag per the following http://stackoverflow.com/questions/5323033/how-do-i-get-the-row-id-of-the-row-from-a-listview-which-contains-a-clickable-i
         // http://stackoverflow.com/questions/11156078/android-get-the-listview-item-from-button-clicked-in-custom-listview
+        // referenced info found in this discussion // https://discussions.udacity.com/t/im-having-some-problems-with-the-final-project-image-and-sell-button/200641/10
         itemName.setTag(rowID);
 
         Button listSellButton = (Button) view.findViewById(R.id.list_sell_button);
