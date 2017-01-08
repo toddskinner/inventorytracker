@@ -1,15 +1,23 @@
 package com.example.android.barinventory;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -22,11 +30,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.barinventory.data.InventoryContract.InventoryEntry;
 import com.example.android.barinventory.data.InventoryDbHelper;
+
+import java.io.FileDescriptor;
+import java.io.IOException;
 
 import static com.example.android.barinventory.data.InventoryProvider.LOG_TAG;
 import static java.lang.Integer.parseInt;
@@ -42,13 +54,20 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceEditText;
     private EditText mPhoneEditText;
     private Spinner mCategorySpinner;
+    private ImageView mUploadImageView;
     private String mPhotoURIString = null;
     private int mCategory = 0;
     private static final int INVENTORY_URL_LOADER = 0;
     private Uri mCurrentInventoryItemUri;
     private boolean mInventoryHasChanged = false;
+    Button uploadPhoto;
     private InventoryDbHelper mDbHelper;
     private static int RESULT_LOAD_IMAGE = 1;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +100,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPhoneEditText = (EditText) findViewById(R.id.edit_item_phone);
         //mPhoneEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         mCategorySpinner = (Spinner) findViewById(R.id.spinner_category);
+        mUploadImageView = (ImageView) findViewById(R.id.upload_image_view);
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
@@ -91,7 +111,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mDbHelper = new InventoryDbHelper(this);
         setupSpinner();
 
-        Button uploadPhoto = (Button) findViewById(R.id.upload_item_photo);
+        uploadPhoto = (Button) findViewById(R.id.upload_item_photo);
         uploadPhoto.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -101,6 +121,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             }
         });
+
+        requestPermissions();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -110,6 +132,64 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mPhotoURIString = data.getData().toString();
 
             Log.i(LOG_TAG, "Uri: " + mPhotoURIString);
+
+            Uri uri = Uri.parse(mPhotoURIString);
+
+            Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>> uri: " + uri);
+
+            Bitmap mBitmap = getBitmapFromUri(uri);
+            mUploadImageView.setImageBitmap(mBitmap);
+            Log.e("Image Uri ", mPhotoURIString);
+
+        }
+    }
+
+    public void requestPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            verifyStoragePermissions(this);
+
+
+        } else {
+            Log.i(LOG_TAG, "Permissions granted");
+        }
+    }
+
+    public static void verifyStoragePermissions(Activity activity) {
+        int permission = ActivityCompat.checkSelfPermission(
+                activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+    private Bitmap getBitmapFromUri(Uri uri) {
+        ParcelFileDescriptor parcelFileDescriptor = null;
+        try {
+            parcelFileDescriptor =
+                    getContentResolver().openFileDescriptor(uri, "r");
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            parcelFileDescriptor.close();
+            return image;
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Failed to load image.", e);
+            return null;
+        } finally {
+            try {
+                if (parcelFileDescriptor != null) {
+                    parcelFileDescriptor.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, "Error closing ParcelFile Descriptor");
+            }
         }
     }
 
