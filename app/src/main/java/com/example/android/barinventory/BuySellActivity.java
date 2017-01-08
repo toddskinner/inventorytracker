@@ -382,10 +382,10 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
-            case R.id.action_save_buy_sell:
-                //exit activity
-                finish();
-                return true;
+//            case R.id.action_save_buy_sell:
+//                //exit activity
+//                finish();
+//                return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete_buy_sell:
                 showDeleteConfirmationDialog();
@@ -454,6 +454,7 @@ public class BuySellActivity extends AppCompatActivity implements LoaderManager.
         // If the item hasn't changed, continue with handling back button press
         if (!mInventoryHasChanged) {
             super.onBackPressed();
+            finish();
             return;
         }
         // Otherwise if there are unsaved changes, setup a dialog to warn the user.
