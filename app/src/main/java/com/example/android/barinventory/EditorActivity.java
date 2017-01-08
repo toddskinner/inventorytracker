@@ -163,8 +163,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         int priceInteger = 0;
         String phoneString = mPhoneEditText.getText().toString().trim();
 
-        if(mCurrentInventoryItemUri == null || TextUtils.isEmpty(nameString) || TextUtils.isEmpty(mQuantityEditText.getText()) || TextUtils.isEmpty(mPhoneEditText.getText()) || mPhotoURIString == null){
+        if(TextUtils.isEmpty(nameString) || TextUtils.isEmpty(mQuantityEditText.getText()) || TextUtils.isEmpty(mPhoneEditText.getText()) || mPhotoURIString == null){
             Toast.makeText(this, R.string.toast_all_data_required, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(phoneString.length() != 10){
+            Toast.makeText(this, R.string.phone_less_than_ten_digits_warning, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -201,6 +206,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, R.string.toast_fail, Toast.LENGTH_SHORT).show();
             }
         }
+        //exit activity
+        finish();
     }
 
     @Override
@@ -230,8 +237,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.action_save:
                 //save item to database
                 saveItem();
-                //exit activity
-                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -360,6 +365,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If the item hasn't changed, continue with handling back button press
         if (!mInventoryHasChanged) {
             super.onBackPressed();
+            finish();
             return;
         }
         // Otherwise if there are unsaved changes, setup a dialog to warn the user.

@@ -97,4 +97,6 @@
 
     <string name="instock">In Stock:</string>
 
+    <string name="phone_less_than_ten_digits_warning">Supplier contact phone number must be 10 digits long</string>
+
 </resources>

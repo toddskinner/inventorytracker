@@ -98,40 +98,6 @@ public class InventoryProvider extends ContentProvider {
     }
 
     private Uri insertInventoryItem(Uri uri, ContentValues values){
-        // Check that the name is not null
-        String name = values.getAsString(InventoryEntry.COLUMN_ITEM_NAME);
-        if (name == null) {
-            throw new IllegalArgumentException("Item requires a name");
-        }
-
-        Integer category = values.getAsInteger(InventoryEntry.COLUMN_ITEM_CATEGORY);
-        if (category == null || !InventoryEntry.isValidCategory(category)) {
-            throw new IllegalArgumentException("Item requires a valid category");
-        }
-
-        // If the quantity is provided, check that it's greater than or equal to 0
-        Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_ITEM_QUANTITY);
-        if (quantity == null || quantity < 0){
-            throw new IllegalArgumentException("Item quantity can not be null or less than 0");
-        }
-
-        // If the price is provided, check that it's greater than or equal to 0
-        Integer price = values.getAsInteger(InventoryEntry.COLUMN_ITEM_PRICE);
-        if (price == null || price < 0){
-            throw new IllegalArgumentException("Item price can not be null or less than 0");
-        }
-
-        // If the phone # is provided, check that it's equal to 10 digits
-        String phone = values.getAsString(InventoryEntry.COLUMN_ITEM_PHONE);
-        if (phone == null || phone.length() != 10){
-            throw new IllegalArgumentException("Supplier contact number can not be null or less than 10 digits");
-        }
-
-        // Check that photo is provided
-        String photo = values.getAsString(InventoryEntry.COLUMN_ITEM_PHOTO);
-        if (photo == null){
-            throw new IllegalArgumentException("Photo not provided");
-        }
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -194,48 +160,6 @@ public class InventoryProvider extends ContentProvider {
     }
 
     private int updateInventory(Uri uri, ContentValues values, String selection, String[] selectionArgs){
-
-        if(values.containsKey(InventoryEntry.COLUMN_ITEM_NAME)){
-            String name = values.getAsString(InventoryEntry.COLUMN_ITEM_NAME);
-            if(name == null){
-                throw new IllegalArgumentException("Item requires a name");
-            }
-        }
-
-        if(values.containsKey(InventoryEntry.COLUMN_ITEM_CATEGORY)) {
-            Integer category = values.getAsInteger(InventoryEntry.COLUMN_ITEM_CATEGORY);
-            if(category != null || !InventoryEntry.isValidCategory(category)){
-                throw new IllegalArgumentException("Item requires a valid category");
-            }
-        }
-
-        if(values.containsKey(InventoryEntry.COLUMN_ITEM_QUANTITY)){
-            Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_ITEM_QUANTITY);
-            if(quantity != null || quantity < 0){
-                throw new IllegalArgumentException("Item quantity can not be null or less than 0");
-            }
-        }
-
-        if(values.containsKey(InventoryEntry.COLUMN_ITEM_PRICE)){
-            Integer price = values.getAsInteger(InventoryEntry.COLUMN_ITEM_PRICE);
-            if(price != null || price < 0){
-                throw new IllegalArgumentException("Item price can not be null or less than 0");
-            }
-        }
-
-        if(values.containsKey(InventoryEntry.COLUMN_ITEM_PHONE)){
-            String phone = values.getAsString(InventoryEntry.COLUMN_ITEM_PHONE);
-            if(phone != null || phone.length() != 10){
-                throw new IllegalArgumentException("Supplier contact phone number can not be null or less than 10 digits");
-            }
-        }
-
-        if(values.containsKey(InventoryEntry.COLUMN_ITEM_PHOTO)){
-            String photo = values.getAsString(InventoryEntry.COLUMN_ITEM_PHOTO);
-            if(photo == null){
-                throw new IllegalArgumentException("Photo not provided");
-            }
-        }
 
         if (values.size() == 0) {
             return 0;
